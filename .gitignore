@@ -1,0 +1,17 @@
+# Configuration files
+config.php
+
+###########
+# Local and temporary files
+###########
+
+# Composer
+vendor/
+composer.lock
+
+###########
+# IDE
+###########
+
+# Netbeans
+nbproject/

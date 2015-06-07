@@ -1,0 +1,6 @@
+<?php
+ORM::configure(array(
+    'connection_string' => 'mysql:host=HOST;dbname=DBNAME',
+    'username' => 'USERNAME',
+    'password' => 'PASSWORD'
+));
