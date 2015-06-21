@@ -3,8 +3,6 @@ define('MT_API_PATH', 'src/api');
 
 require 'vendor/autoload.php';
 require 'src/api/Common.php';
-//require 'vendor/slim/slim/Slim/Slim.php';
-//require 'vendor/j4mie/idiorm/idiorm.php';
 
 /*
  * Sets database connection via ORM::configure 
@@ -16,6 +14,14 @@ include 'config.php';
 $app = new \Slim\Slim(array(
 	'debug' => true
 ));
+
+$app->add(new \Slim\Middleware\HttpBasicAuthentication([
+	"secure" => false,
+    "users" => [
+        "root" => "test",
+        "user" => "password"
+    ]
+]));
 
 $app->hook("slim.before.router", function() use ($app) {
 	$path = $app->request()->getPathInfo();
