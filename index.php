@@ -29,41 +29,37 @@ $app->hook("slim.before.router", function() use ($app) {
 
 const PARAM_FIELDS = 'fields';
 const PARAM_ORDER = 'order';
+const PARAM_LIMIT = 'limit';
+const PARAM_OFFSET = 'offset';
+
+function getParam($paramName) {
+	global $app;
+	return json_decode($app->request->get($paramName));
+}
+function getBody() {
+	global $app;
+	return json_decode($app->request->getBody(), TRUE);
+}
 
 // 'api' group
 $app->group('/api', function () use ($app) {	
 	//$app->get('/news/', function() { get(); });
 	$app->get('/photographers/', function() use ($app) {
-		$fields = $app->request->get(PARAM_FIELDS);
-		if (!empty($fields)) {
-			$fields = json_decode($fields);
-		}
-		$order = $app->request->get(PARAM_ORDER);
-		if (!empty($order)) {
-			$order = json_decode($order);
-		}		
-		
-		$app->response->setStatus(MT_Photographer::getList($fields, $order));
+		$app->response->setStatus(MT_Photographer::getList(getParam(PARAM_FIELDS), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
 	});
-	$app->post('/photographers/', function() use ($app) {MT_Photographer::post(); });	
+	$app->post('/photographers/', function() use ($app) {
+		$app->response->setStatus(MT_Photographer::post(getBody()));
+	});	
 	$app->get('/photographers/:id', function($id) use ($app) {
-		$fields = $app->request->get(PARAM_FIELDS);
-		if (!empty($fields)) {
-			$fields = json_decode($fields);
-		}		
-		$app->response->setStatus(MT_Photographer::getItem($id, $fields));
+		$app->response->setStatus(MT_Photographer::getItem($id, getParam(PARAM_FIELDS)));
 	});
 	$app->post('/photographers/:id', function($id) use ($app) {
-		$data = $app->request->getBody();
-		if (!empty($data)) {
-			$data = json_decode($data, TRUE);
-		}
-		$app->response->setStatus(MT_Photographer::postItem($id, $data));
+		$app->response->setStatus(MT_Photographer::postItem($id, getBody()));
 	});	
 	$app->delete('/photographers/:id', function($id) use ($app) {
 		$app->response->setStatus(MT_Photographer::deleteItem($id));
 	});
-	
+		
 });
 
 $app->run();

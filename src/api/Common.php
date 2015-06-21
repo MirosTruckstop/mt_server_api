@@ -16,6 +16,7 @@ abstract class MT_Common {
 
 	
 	const STATUS_200_OK = 200;
+	const STATUS_201_CREATED = 201;
 	const STATUS_202_ACCEPTED = 202;
 	const STATUS_204_NO_CONTENT = 204;
 	
@@ -35,14 +36,23 @@ abstract class MT_Common {
 	 * 
 	 * @param string|array $fields
 	 * @param string $order
+	 * @param integer $limit 
+	 * @param integer $offset 
+	 * @return integer HTTP status code
 	 */
-	public static function getList($fields = NULL, $order = NULL) {
+	public static function getList($fields = NULL, $order = NULL, $limit = NULL, $offset = NULL) {
 		$query = ORM::for_table(self::getTableName());
-		if (!empty($fields)) {
+		if ($fields) {
 			$query->select_many($fields);
 		}
 		if (!empty($order)) {
 			$query->order_by_asc('name');
+		}
+		if (!empty($limit)) {
+			$query->limit($limit);
+		}
+		if (!empty($offset)) {
+			$query->offset($offset);
 		}
 		
 		try {
@@ -53,9 +63,19 @@ abstract class MT_Common {
 		}
 	}
 
-	
-	public static function post($data) {
-		
+	/**
+	 * 
+	 * @param array $data
+	 * @return integer HTTP status code
+	 */
+	public static function post(array $data) {
+		try {
+			$item = ORM::for_table(self::getTableName())->create();
+			$item->set($data)->save();
+			return self::STATUS_201_CREATED;
+		} catch (Exception $e) {
+			return self::STATUS_400_BAD_REQUEST;
+		}
 	}
 	
 	
@@ -88,12 +108,9 @@ abstract class MT_Common {
 	 * 
 	 * @param integer $id
 	 * @param array $data 
+	 * @return integer HTTP status code
 	 */
 	public static function postItem($id, array $data) {
-//		if (empty($data)) {
-//			return self::STATUS_204_NO_CONTENT;			
-//		}
-		
 		try {
 			$item = ORM::for_table(self::getTableName())->find_one($id);
 			if ($item) {
@@ -110,6 +127,7 @@ abstract class MT_Common {
 	/**
 	 * 
 	 * @param integer $id
+	 * @return string HTTP status code
 	 */
 	public static function deleteItem($id) {
 		$item = ORM::for_table(self::getTableName())->find_one($id);
