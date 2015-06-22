@@ -2,6 +2,7 @@
 define('MT_API_PATH', 'src/api');
 
 require 'vendor/autoload.php';
+require 'src/config/WordPressAuthenticator.php';
 require 'src/api/Common.php';
 
 /*
@@ -17,10 +18,7 @@ $app = new \Slim\Slim(array(
 
 $app->add(new \Slim\Middleware\HttpBasicAuthentication([
 	"secure" => false,
-    "users" => [
-        "root" => "test",
-        "user" => "password"
-    ]
+    "authenticator" => new WordPressAuthenticator()
 ]));
 
 $app->hook("slim.before.router", function() use ($app) {
