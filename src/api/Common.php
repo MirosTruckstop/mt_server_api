@@ -46,7 +46,7 @@ abstract class MT_Common {
 			$query->select_many($fields);
 		}
 		if (!empty($order)) {
-			$query->order_by_asc('name');
+			$query->order_by_asc($order);
 		}
 		if (!empty($limit)) {
 			$query->limit($limit);
