@@ -9,12 +9,6 @@ abstract class MT_Common {
 
 	const DB_PREFIX = 'wp_mt_';
 	
-//	protected $id;
-//	public static $dbPreafix = 'wp_mt_';
-
-//	public abstract static function name();
-
-	
 	const STATUS_200_OK = 200;
 	const STATUS_201_CREATED = 201;
 	const STATUS_202_ACCEPTED = 202;
@@ -22,6 +16,13 @@ abstract class MT_Common {
 	
 	const STATUS_400_BAD_REQUEST = 400;
 	const STATUS_404_NOT_FOUND = 404;
+	
+	/**
+	 * All allowed filter types, i.e. the first element of the paramter $filter.
+	 * 
+	 * @type array
+	 */
+	const SUPPORTED_FILTER_TYPES = ['=', 'LIKE', '<', '<=', '>', '>='];
 	
 	/**
 	 * 
@@ -35,15 +36,23 @@ abstract class MT_Common {
 	 * @todo Array for $order supported?
 	 * 
 	 * @param string|array $fields
+	 * @param array $filter [<type>, <column>, <value>]
 	 * @param string $order
 	 * @param integer $limit 
 	 * @param integer $offset 
 	 * @return integer HTTP status code
 	 */
-	public static function getList($fields = NULL, $order = NULL, $limit = NULL, $offset = NULL) {
+	public static function getList($fields = NULL, $filter = NULL, $order = NULL, $limit = NULL, $offset = NULL) {
 		$query = ORM::for_table(self::getTableName());
 		if ($fields) {
 			$query->select_many($fields);
+		}
+		if (!empty($filter)) {
+			if (count($filter) == 3 && in_array($filter[0], self::SUPPORTED_FILTER_TYPES)) {
+				$query->where_raw('(`'.$filter[1].'` '.$filter[0].' ?)', $filter[2]);				
+			} else {
+				return self::STATUS_400_BAD_REQUEST;
+			}
 		}
 		if (!empty($order)) {
 			$query->order_by_asc($order);

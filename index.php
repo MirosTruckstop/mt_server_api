@@ -32,6 +32,7 @@ $app->hook("slim.before.router", function() use ($app) {
 });
 
 const PARAM_FIELDS = 'fields';
+const PARAM_FILTER = 'filter';
 const PARAM_ORDER = 'order';
 const PARAM_LIMIT = 'limit';
 const PARAM_OFFSET = 'offset';
@@ -49,7 +50,7 @@ function getBody() {
 $app->group('/api', function () use ($app) {	
 	//$app->get('/news/', function() { get(); });
 	$app->get('/photographers/', function() use ($app) {
-		$app->response->setStatus(MT_Photographer::getList(getParam(PARAM_FIELDS), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
+		$app->response->setStatus(MT_Photographer::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
 	});
 	$app->post('/photographers/', function() use ($app) {
 		$app->response->setStatus(MT_Photographer::post(getBody()));
