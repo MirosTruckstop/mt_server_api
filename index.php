@@ -8,7 +8,7 @@ require 'src/api/Common.php';
 /*
  * Sets database connection via ORM::configure 
  */
-include 'config.php';
+include 'src/config/database.php';
 
 \Slim\Slim::registerAutoloader();
 

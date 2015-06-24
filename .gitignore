@@ -1,6 +1,6 @@
 # Configuration files
 .htaccess
-config.php
+config/database.php
 
 ###########
 # Local and temporary files
