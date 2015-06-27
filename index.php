@@ -31,32 +31,38 @@ $app->hook("slim.before.router", function() use ($app) {
 	}
 });
 
+// Response header parameters
+const HEADER_X_TOTAL_COUNT = 'X-Total-Count';
+// Request parameters
 const PARAM_FIELDS = 'fields';
 const PARAM_FILTER = 'filter';
 const PARAM_ORDER = 'order';
 const PARAM_LIMIT = 'limit';
 const PARAM_OFFSET = 'offset';
 
-function getParam($paramName) {
+function getParam($param) {
 	global $app;
-	return json_decode($app->request->get($paramName));
+	return json_decode($app->request->get($param));
 }
 function getBody() {
 	global $app;
 	return json_decode($app->request->getBody(), TRUE);
 }
+function setHeader($param, $value) {
+	global $app;
+	$app->response->headers->set($param, $value);
+}
 
 // 'api' group
-$app->group('/api', function () use ($app) {	
-	//$app->get('/news/', function() { get(); });
+$app->group('/api', function () use ($app) {
 	$app->get('/photographers/', function() use ($app) {
 		$app->response->setStatus(MT_Photographer::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
 	});
-	$app->post('/photographers/', function() use ($app) {
-		$app->response->setStatus(MT_Photographer::post(getBody()));
-	});	
 	$app->get('/photographers/:id', function($id) use ($app) {
 		$app->response->setStatus(MT_Photographer::getItem($id, getParam(PARAM_FIELDS)));
+	});
+	$app->post('/photographers/', function() use ($app) {
+		$app->response->setStatus(MT_Photographer::post(getBody()));
 	});
 	$app->post('/photographers/:id', function($id) use ($app) {
 		$app->response->setStatus(MT_Photographer::postItem($id, getBody()));

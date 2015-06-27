@@ -36,7 +36,7 @@ abstract class MT_Common {
 	 * @todo Array for $order supported?
 	 * 
 	 * @param string|array $fields
-	 * @param array $filter [<type>, <column>, <value>]
+	 * @param array $filter [<filter type>, <field name>, <value>]
 	 * @param string $order
 	 * @param integer $limit 
 	 * @param integer $offset 
@@ -57,6 +57,11 @@ abstract class MT_Common {
 		if (!empty($order)) {
 			$query->order_by_asc($order);
 		}
+		// Get and set the total number of element before $limit and $offset
+		// parameters.
+		$queryClone = clone $query;
+		setHeader(HEADER_X_TOTAL_COUNT, $queryClone->count());
+
 		if (!empty($limit)) {
 			$query->limit($limit);
 		}
