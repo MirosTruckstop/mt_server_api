@@ -35,12 +35,12 @@ abstract class MT_Common {
 	/**
 	 * @todo Array for $order supported?
 	 * 
-	 * @param string|array $fields
-	 * @param array $filter [<filter type>, <field name>, <value>]
-	 * @param string $order
-	 * @param int $limit 
-	 * @param int $offset 
-	 * @return int HTTP status code
+	 * @param string|array|null $fields
+	 * @param array|null $filter [<filter type>, <field name>, <value>]
+	 * @param string|null $order
+	 * @param int|null $limit 
+	 * @param int|null $offset 
+	 * @return int|null HTTP status code
 	 */
 	public static function getList($fields = NULL, $filter = NULL, $order = NULL, $limit = NULL, $offset = NULL) {
 		$query = ORM::for_table(self::getTableName());
@@ -96,7 +96,7 @@ abstract class MT_Common {
 	/**
 	 * 
 	 * @param int $id
-	 * @param string|array $fields
+	 * @param string|array|null $fields
 	 */
 	public static function getItem($id, $fields = NULL) {
 		$query = ORM::for_table(self::getTableName());

@@ -19,7 +19,7 @@ $app = new \Slim\Slim(array(
 
 $app->add(new \Slim\Middleware\HttpBasicAuthentication([
 	"secure" => false,
-    "authenticator" => new WordPressAuthenticator()
+	"authenticator" => new WordPressAuthenticator()
 ]));
 
 $app->hook("slim.before.router", function() use ($app) {

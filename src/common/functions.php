@@ -13,7 +13,7 @@ const PARAM_OFFSET = 'offset';
  * 
  * @global object $app
  * @param string $param
- * @return misc|null
+ * @return mixed|null
  */
 function getParam($param) {
 	global $app;
