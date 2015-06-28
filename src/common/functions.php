@@ -1,6 +1,9 @@
 <?php
 // Response header parameter names
+const HEADER_CONTENT_TYPE = 'Content-Type';
 const HEADER_X_TOTAL_COUNT = 'X-Total-Count';
+// Response header parameter values
+const HEADER_CONTENT_TYPE_JSON = 'application/json';
 // Request parameter names
 const PARAM_FIELDS = 'fields';
 const PARAM_FILTER = 'filter';
@@ -47,6 +50,8 @@ function setHeader($param, $value) {
  * @param mixed $value
  */
 function setBody($value) {
+	setHeader(HEADER_CONTENT_TYPE, HEADER_CONTENT_TYPE_JSON);
+
 	global $mt_json_encode_options;
 	echo json_encode($value, $mt_json_encode_options);
 }

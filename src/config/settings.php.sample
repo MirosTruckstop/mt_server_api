@@ -6,9 +6,9 @@
  * @var array
  */
 $mt_db_configure = array(
-    'connection_string' => 'mysql:host=HOST;dbname=DBNAME',
-    'username' => 'USERNAME',
-    'password' => 'PASSWORD',
+	'connection_string' => 'mysql:host=HOST;dbname=DBNAME',
+	'username' => 'USERNAME',
+	'password' => 'PASSWORD',
 	'driver_options' => array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')	
 );
 /**
