@@ -68,7 +68,7 @@ abstract class MT_Common {
 		if (!empty($offset)) {
 			$query->offset($offset);
 		}
-		
+
 		try {
 			echo json_encode($query->find_array());
 			return self::STATUS_200_OK;

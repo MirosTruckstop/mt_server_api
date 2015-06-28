@@ -23,10 +23,10 @@ $app->add(new \Slim\Middleware\HttpBasicAuthentication([
 
 $app->hook("slim.before.router", function() use ($app) {
 	$path = $app->request()->getPathInfo();
-	/*if (strpos($path, "news") !== false) {
-		require MT_API_PATH.'/news.php';
+	if (strpos($path, "news") !== false) {
+		require MT_API_PATH.'/News.php';
 	}	
-	else*/ if (strpos($path, "photographers") !== false) {
+	else if (strpos($path, "photographers") !== false) {
 		require MT_API_PATH.'/Photographers.php';
 	}
 });
@@ -55,6 +55,14 @@ function setHeader($param, $value) {
 
 // 'api' group
 $app->group('/api', function () use ($app) {
+	// News
+	$app->get('/news/', function() use ($app) {
+		$app->response->setStatus(MT_News::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
+	});
+	$app->get('/news/:id', function($id) use ($app) {
+		$app->response->setStatus(MT_News::getItem($id, getParam(PARAM_FIELDS)));
+	});
+	// Photographer
 	$app->get('/photographers/', function() use ($app) {
 		$app->response->setStatus(MT_Photographer::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
 	});
