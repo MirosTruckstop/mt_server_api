@@ -52,6 +52,9 @@ function setHeader($param, $value) {
 	global $app;
 	$app->response->headers->set($param, $value);
 }
+function setBody($value) {
+	echo json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+}
 
 // 'api' group
 $app->group('/api', function () use ($app) {

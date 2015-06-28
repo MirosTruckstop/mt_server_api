@@ -70,7 +70,7 @@ abstract class MT_Common {
 		}
 
 		try {
-			echo json_encode($query->find_array());
+			setBody($query->find_array());
 			return self::STATUS_200_OK;
 		} catch (Exception $e) {
 			return self::STATUS_400_BAD_REQUEST;
@@ -108,7 +108,7 @@ abstract class MT_Common {
 		try {
 			$item = $query->find_one();
 			if ($item) {
-				echo json_encode($item->as_array());
+				setBody($item->as_array());
 				return self::STATUS_200_OK;				
 			} else {
 				return self::STATUS_204_NO_CONTENT;
