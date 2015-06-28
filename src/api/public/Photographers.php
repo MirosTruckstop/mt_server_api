@@ -2,8 +2,8 @@
 /**
  * Model of a photographer.
  * 
- * @package public
- * @subpackage model
+ * @package api
+ * @subpackage public
  */
 class MT_Photographer extends MT_Common {
 	

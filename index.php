@@ -4,9 +4,8 @@ define('MT_API_PATH', 'src/api');
 require 'vendor/autoload.php';
 
 include 'src/config/settings.php';
-require 'src/config/WordPressAuthenticator.php';
 require 'src/common/functions.php';
-require 'src/api/Common.php';
+require 'src/config/WordPressAuthenticator.php';
 
 
 ORM::configure($mt_db_configure);
@@ -25,15 +24,17 @@ $app->add(new \Slim\Middleware\HttpBasicAuthentication([
 $app->hook("slim.before.router", function() use ($app) {
 	$path = $app->request()->getPathInfo();
 	if (strpos($path, "news") !== false) {
-		require MT_API_PATH.'/News.php';
+		require MT_API_PATH.'/public/News.php';
 	}	
 	else if (strpos($path, "photographers") !== false) {
-		require MT_API_PATH.'/Photographers.php';
+		require MT_API_PATH.'/public/Photographers.php';
 	}
 });
 
-// 'api' group
-$app->group('/api', function () use ($app) {
+// 'public' group
+$app->group('/api/public', function () use ($app) {
+	require MT_API_PATH.'/public/Common.php';
+
 	// News
 	$app->get('/news/', function() use ($app) {
 		$app->response->setStatus(MT_News::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
@@ -56,8 +57,17 @@ $app->group('/api', function () use ($app) {
 	});	
 	$app->delete('/photographers/:id', function($id) use ($app) {
 		$app->response->setStatus(MT_Photographer::deleteItem($id));
+	});	
+});
+
+// 'admin' group
+$app->group('/api/admin', function () use ($app) {
+	require MT_API_PATH.'/admin/Common.php';
+
+	$app->get('/generateNews/', function() use ($app) {
+		require MT_API_PATH.'/admin/NewsGeneration.php';
+		$app->response->setStatus(MT_Admin_NewsGeneration::getGeneratedNews());
 	});
-		
 });
 
 $app->run();

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @package common
+ */
 class WordPressAuthenticator implements Slim\Middleware\HttpBasicAuthentication\AuthenticatorInterface {
 	
 	private $options;

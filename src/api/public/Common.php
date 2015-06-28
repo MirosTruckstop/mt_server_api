@@ -2,20 +2,10 @@
 /**
  * Common model
  * 
- * @package public
- * @subpackage model
+ * @package api
+ * @subpackage public
  */
 abstract class MT_Common {
-
-	const DB_PREFIX = 'wp_mt_';
-	
-	const STATUS_200_OK = 200;
-	const STATUS_201_CREATED = 201;
-	const STATUS_202_ACCEPTED = 202;
-	const STATUS_204_NO_CONTENT = 204;
-	
-	const STATUS_400_BAD_REQUEST = 400;
-	const STATUS_404_NOT_FOUND = 404;
 	
 	/**
 	 * All allowed filter types, i.e. the first element of the paramter $filter.
@@ -29,7 +19,7 @@ abstract class MT_Common {
 	 * @return string
 	 */
 	private static function getTableName() {
-		return self::DB_PREFIX.static::NAME;
+		return DB_PREFIX.static::NAME;
 	}
 
 	/**
@@ -51,7 +41,7 @@ abstract class MT_Common {
 			if (count($filter) == 3 && in_array($filter[0], self::SUPPORTED_FILTER_TYPES)) {
 				$query->where_raw('(`'.$filter[1].'` '.$filter[0].' ?)', $filter[2]);				
 			} else {
-				return self::STATUS_400_BAD_REQUEST;
+				return HTTP_STATUS_400_BAD_REQUEST;
 			}
 		}
 		if (!empty($order)) {
@@ -71,10 +61,27 @@ abstract class MT_Common {
 
 		try {
 			setBody($query->find_array());
-			return self::STATUS_200_OK;
+			return HTTP_STATUS_200_OK;
 		} catch (Exception $e) {
-			return self::STATUS_400_BAD_REQUEST;
+			return HTTP_STATUS_400_BAD_REQUEST;
 		}
+	}
+	
+	/**
+	 * 
+	 * @param string $aggregateFunctionName Aggregate function, e.g. 'MAX', 'AVG'
+	 * @param string $fieldName
+	 * @retunr string|int
+	 */
+	protected static function getAggregate($aggregateFunctionName, $fieldName) {
+		$query = ORM::for_table(self::getTableName());
+		$query->select_expr($aggregateFunctionName.'('.$fieldName.')', 'value');
+		try {
+			$item = $query->find_one();
+			return $item->value;
+		} catch (Exception $e) {
+			echo $e;
+		}		
 	}
 
 	/**
@@ -86,9 +93,9 @@ abstract class MT_Common {
 		try {
 			$item = ORM::for_table(self::getTableName())->create();
 			$item->set($data)->save();
-			return self::STATUS_201_CREATED;
+			return HTTP_STATUS_201_CREATED;
 		} catch (Exception $e) {
-			return self::STATUS_400_BAD_REQUEST;
+			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
 	
@@ -109,12 +116,12 @@ abstract class MT_Common {
 			$item = $query->find_one();
 			if ($item) {
 				setBody($item->as_array());
-				return self::STATUS_200_OK;				
+				return HTTP_STATUS_200_OK;				
 			} else {
-				return self::STATUS_204_NO_CONTENT;
+				return HTTP_STATUS_204_NO_CONTENT;
 			}
 		} catch (Exception $e) {
-			return self::STATUS_400_BAD_REQUEST;
+			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
 	
@@ -129,12 +136,12 @@ abstract class MT_Common {
 			$item = ORM::for_table(self::getTableName())->find_one($id);
 			if ($item) {
 				$item->set($data)->save();
-				return self::STATUS_202_ACCEPTED;
+				return HTTP_STATUS_202_ACCEPTED;
 			} else {
-				return self::STATUS_204_NO_CONTENT;
+				return HTTP_STATUS_204_NO_CONTENT;
 			}
 		} catch (Exception $e) {
-			return self::STATUS_400_BAD_REQUEST;
+			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
 	
@@ -147,9 +154,9 @@ abstract class MT_Common {
 		$item = ORM::for_table(self::getTableName())->find_one($id);
 		if ($item) {
 			$item->delete();
-			return self::STATUS_202_ACCEPTED;
+			return HTTP_STATUS_202_ACCEPTED;
 		}
-		return self::STATUS_204_NO_CONTENT;
+		return HTTP_STATUS_204_NO_CONTENT;
 	}
 	
 }

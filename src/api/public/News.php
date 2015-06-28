@@ -2,8 +2,8 @@
 /**
  * Model of a news.
  * 
- * @package public
- * @subpackage model
+ * @package api
+ * @subpackage public
  */
 class MT_News extends MT_Common {
 	

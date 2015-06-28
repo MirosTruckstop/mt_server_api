@@ -1,5 +1,11 @@
 <?php
 /**
+ * Database prefix
+ * 
+ * @var string
+ */
+const DB_PREFIX = 'wp_mt_';
+/**
  * Database connection settings
  * 
  * @see https://idiorm.readthedocs.org/en/latest/configuration.html
