@@ -1,7 +1,10 @@
 <?php
-ORM::configure(array(
+// Database connection
+$mt_db_configure = array(
     'connection_string' => 'mysql:host=HOST;dbname=DBNAME',
     'username' => 'USERNAME',
     'password' => 'PASSWORD',
 	'driver_options' => array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')	
-));
+);
+// JSON encode options
+$mt_json_encode_options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT;

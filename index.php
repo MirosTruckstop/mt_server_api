@@ -2,13 +2,14 @@
 define('MT_API_PATH', 'src/api');
 
 require 'vendor/autoload.php';
+
+include 'src/config/settings.php';
 require 'src/config/WordPressAuthenticator.php';
+require 'src/common/functions.php';
 require 'src/api/Common.php';
 
-/*
- * Sets database connection via ORM::configure 
- */
-include 'src/config/database.php';
+
+ORM::configure($mt_db_configure);
 
 \Slim\Slim::registerAutoloader();
 
@@ -30,31 +31,6 @@ $app->hook("slim.before.router", function() use ($app) {
 		require MT_API_PATH.'/Photographers.php';
 	}
 });
-
-// Response header parameters
-const HEADER_X_TOTAL_COUNT = 'X-Total-Count';
-// Request parameters
-const PARAM_FIELDS = 'fields';
-const PARAM_FILTER = 'filter';
-const PARAM_ORDER = 'order';
-const PARAM_LIMIT = 'limit';
-const PARAM_OFFSET = 'offset';
-
-function getParam($param) {
-	global $app;
-	return json_decode($app->request->get($param));
-}
-function getBody() {
-	global $app;
-	return json_decode($app->request->getBody(), TRUE);
-}
-function setHeader($param, $value) {
-	global $app;
-	$app->response->headers->set($param, $value);
-}
-function setBody($value) {
-	echo json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-}
 
 // 'api' group
 $app->group('/api', function () use ($app) {
