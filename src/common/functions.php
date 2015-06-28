@@ -34,7 +34,7 @@ function getBody() {
  * 
  * @global object $app
  * @param string $param
- * @param string|integer $value
+ * @param string|int $value
  */
 function setHeader($param, $value) {
 	global $app;
@@ -43,7 +43,7 @@ function setHeader($param, $value) {
 /**
  * Sets the body of the reponse, i.e. encodes and outputs the given value.
  * 
- * @global integer $mt_json_encode_options
+ * @global int $mt_json_encode_options
  * @param mixed $value
  */
 function setBody($value) {

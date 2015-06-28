@@ -38,9 +38,9 @@ abstract class MT_Common {
 	 * @param string|array $fields
 	 * @param array $filter [<filter type>, <field name>, <value>]
 	 * @param string $order
-	 * @param integer $limit 
-	 * @param integer $offset 
-	 * @return integer HTTP status code
+	 * @param int $limit 
+	 * @param int $offset 
+	 * @return int HTTP status code
 	 */
 	public static function getList($fields = NULL, $filter = NULL, $order = NULL, $limit = NULL, $offset = NULL) {
 		$query = ORM::for_table(self::getTableName());
@@ -80,7 +80,7 @@ abstract class MT_Common {
 	/**
 	 * 
 	 * @param array $data
-	 * @return integer HTTP status code
+	 * @return int HTTP status code
 	 */
 	public static function post(array $data) {
 		try {
@@ -95,7 +95,7 @@ abstract class MT_Common {
 	
 	/**
 	 * 
-	 * @param integer $id
+	 * @param int $id
 	 * @param string|array $fields
 	 */
 	public static function getItem($id, $fields = NULL) {
@@ -120,9 +120,9 @@ abstract class MT_Common {
 	
 	/**
 	 * 
-	 * @param integer $id
+	 * @param int $id
 	 * @param array $data 
-	 * @return integer HTTP status code
+	 * @return int HTTP status code
 	 */
 	public static function postItem($id, array $data) {
 		try {
@@ -140,7 +140,7 @@ abstract class MT_Common {
 	
 	/**
 	 * 
-	 * @param integer $id
+	 * @param int $id
 	 * @return string HTTP status code
 	 */
 	public static function deleteItem($id) {
