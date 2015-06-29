@@ -66,23 +66,6 @@ abstract class MT_Common {
 			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
-	
-	/**
-	 * 
-	 * @param string $aggregateFunctionName Aggregate function, e.g. 'MAX', 'AVG'
-	 * @param string $fieldName
-	 * @retunr string|int
-	 */
-	protected static function getAggregate($aggregateFunctionName, $fieldName) {
-		$query = ORM::for_table(self::getTableName());
-		$query->select_expr($aggregateFunctionName.'('.$fieldName.')', 'value');
-		try {
-			$item = $query->find_one();
-			return $item->value;
-		} catch (Exception $e) {
-			echo $e;
-		}		
-	}
 
 	/**
 	 * 
@@ -98,7 +81,6 @@ abstract class MT_Common {
 			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
-	
 	
 	/**
 	 * 

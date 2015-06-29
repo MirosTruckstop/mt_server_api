@@ -66,7 +66,7 @@ $app->group('/api/admin', function () use ($app) {
 
 	$app->get('/generateNews/', function() use ($app) {
 		require MT_API_PATH.'/admin/NewsGeneration.php';
-		$app->response->setStatus(MT_Admin_NewsGeneration::getGeneratedNews());
+		$app->response->setStatus((new MT_Admin_NewsGeneration)->action());
 	});
 });
 

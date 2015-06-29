@@ -7,29 +7,34 @@
  * @subpackage admin
  */
 class MT_Admin_NewsGeneration extends MT_Admin_Common {
-	
+
 	/**
 	 * Timestamp of the last news
 	 * 
 	 * @var integer 
 	 */
 	private $timestampLatestNews;
-	
-	public function __construct() {
-//		$this->timestampLatestNews = MT_News::getLatestNewsTimestamp();
-	}
 
 	/**
-	 * Überprüft, ob seit der letzten News-Generierung neue Bilde hinzugekommen sind,
-	 * d.h. ob es überhaupt News zum Generieren gibt
-	 *
-	 * @return	boolean
+	 * 
+	 * @return int HTTP status code
 	 */
-	public function checkGenerateNews() {
-//		return ($this->timestampLatestNews < MT_Photo::getLatestPhotoDate() );
+	public function action() {
+		$this->timestampLatestNews = parent::getAggregate('news', 'MAX', 'date');
+		$timestampLatestPhoto = parent::getAggregate('photo', 'MAX', 'date');
+		
+		if ($this->timestampLatestNews < $timestampLatestPhoto) {
+			return parent::getList($this->getGeneratedNews());
+		} else {
+			return parent::getList(array());
+		}
 	}
 	
-	public static function getGeneratedNews() {
+	/**
+	 * 
+	 * @return array
+	 */
+	private function getGeneratedNews() {
 		$query = ORM::for_table('wp_mt_photo')
 					->select_many(array(
 						'galleryName' => 'wp_mt_gallery.name',
@@ -41,7 +46,7 @@ class MT_Admin_NewsGeneration extends MT_Admin_Common {
 					->inner_join('wp_mt_category', 'wp_mt_category.id = wp_mt_gallery.category')
 					->left_outer_join('wp_mt_subcategory', 'wp_mt_subcategory.id = wp_mt_gallery.subcategory')
 					->where_equal('wp_mt_photo.show', 1)
-					->where_gte('wp_mt_photo.date', 999999) // TODO: change
+					->where_gte('wp_mt_photo.date', $this->timestampLatestNews)
 					->group_by(array('wp_mt_category.name', 'wp_mt_subcategory.name', 'wp_mt_gallery.name'))
 					->order_by_desc('numPhotos');
 
@@ -53,7 +58,7 @@ class MT_Admin_NewsGeneration extends MT_Admin_Common {
 				'gallery' => $item->id
 			));
 		}
-		return parent::getList($news);
+		return $news;
 	}
 	
 	/**
@@ -66,14 +71,14 @@ class MT_Admin_NewsGeneration extends MT_Admin_Common {
 	 * @param int $numPhotos Number of added photos
 	 * @return string Title of the news
 	 */
-	private static function generateTitle($catgegoryName, $subcategoryName = NULL, $galleryName, $galleryDate, $numPhotos) {
+	private function generateTitle($catgegoryName, $subcategoryName = NULL, $galleryName, $galleryDate, $numPhotos) {
 		$title = $catgegoryName;
 		if( !empty($subcategoryName) ) {
 			$title .= ' > ' . $subcategoryName;
 		}
 		$title .= ': ';
 		// New gallery
-		if($galleryDate  >= 999999) {	// TODO: change			
+		if($galleryDate  >= $this->timestampLatestNews) {		
 			$title .= "Neue Galerie '" . $galleryName . "'";
 		}
 		// New photos only
@@ -94,7 +99,7 @@ class MT_Admin_NewsGeneration extends MT_Admin_Common {
 	 * @param int $numPhotos Number of photos added
 	 * @return string Text of the news
 	 */
-	private static function generateText($numPhotos) {
+	private function generateText($numPhotos) {
 		$text = $numPhotos . ' ';
 		if($numPhotos > 1) {
 			$text .= 'neue Bilder';
