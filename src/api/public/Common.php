@@ -30,10 +30,13 @@ abstract class MT_Common {
 	 * @param string|null $order
 	 * @param int|null $limit 
 	 * @param int|null $offset 
-	 * @return int|null HTTP status code
+	 * @param object.ORM|null $query
+ 	 * @return int|null HTTP status code
 	 */
-	public static function getList($fields = NULL, $filter = NULL, $order = NULL, $limit = NULL, $offset = NULL) {
-		$query = ORM::for_table(self::getTableName());
+	public static function getList($fields = NULL, $filter = NULL, $order = NULL, $limit = NULL, $offset = NULL, $query = NULL) {
+		if (!isset($query)) {
+			$query = ORM::for_table(self::getTableName());			
+		}
 		if ($fields) {
 			$query->select_many($fields);
 		}

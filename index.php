@@ -17,16 +17,22 @@ $app = new \Slim\Slim(array(
 ));
 
 $app->add(new \Slim\Middleware\HttpBasicAuthentication([
-	"secure" => false,
-	"authenticator" => new WordPressAuthenticator()
+	'secure' => false,
+	'authenticator' => new WordPressAuthenticator()
 ]));
 
-$app->hook("slim.before.router", function() use ($app) {
+$app->hook('slim.before.router', function() use ($app) {
 	$path = $app->request()->getPathInfo();
-	if (strpos($path, "news") !== false) {
+	if (strpos($path, 'photos') !== false) {
+		require MT_API_PATH.'/public/Photos.php';
+	}
+	else if (strpos($path, 'galleries') !== false) {
+		require MT_API_PATH.'/public/Gallery.php';
+	}
+	else if (strpos($path, 'news') !== false) {
 		require MT_API_PATH.'/public/News.php';
-	}	
-	else if (strpos($path, "photographers") !== false) {
+	}
+	else if (strpos($path, 'photographers') !== false) {
 		require MT_API_PATH.'/public/Photographers.php';
 	}
 });
@@ -34,7 +40,17 @@ $app->hook("slim.before.router", function() use ($app) {
 // 'public' group
 $app->group('/api/public', function () use ($app) {
 	require MT_API_PATH.'/public/Common.php';
-
+	// Photo
+	$app->get('/photos', function() use ($app) {
+		$app->response->setStatus(MT_Photo::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
+	});
+	// Gallery
+	$app->get('/galleries/', function() use ($app) {
+		$app->response->setStatus(MT_Gallery::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
+	});
+	$app->get('/galleries/:id', function($id) use ($app) {
+		$app->response->setStatus(MT_Gallery::getItem($id, getParam(PARAM_FIELDS)));
+	});
 	// News
 	$app->get('/news/', function() use ($app) {
 		$app->response->setStatus(MT_News::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
@@ -57,7 +73,7 @@ $app->group('/api/public', function () use ($app) {
 	});	
 	$app->delete('/photographers/:id', function($id) use ($app) {
 		$app->response->setStatus(MT_Photographer::deleteItem($id));
-	});	
+	});
 });
 
 // 'admin' group
