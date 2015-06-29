@@ -26,7 +26,7 @@ abstract class MT_Common {
 	 * @todo Array for $order supported?
 	 * 
 	 * @param string|array|null $fields
-	 * @param array|null $filter [<filter type>, <field name>, <value>]
+	 * @param array|null $filter [<field name>, <filter type>, <value>]
 	 * @param string|null $order
 	 * @param int|null $limit 
 	 * @param int|null $offset 
@@ -41,8 +41,8 @@ abstract class MT_Common {
 			$query->select_many($fields);
 		}
 		if (!empty($filter)) {
-			if (count($filter) == 3 && in_array($filter[0], self::SUPPORTED_FILTER_TYPES)) {
-				$query->where_raw('(`'.$filter[1].'` '.$filter[0].' ?)', $filter[2]);				
+			if (count($filter) == 3 && in_array($filter[1], self::SUPPORTED_FILTER_TYPES)) {
+				$query->where_raw('(`'.$filter[0].'` '.$filter[1].' ?)', $filter[2]);				
 			} else {
 				return HTTP_STATUS_400_BAD_REQUEST;
 			}
