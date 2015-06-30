@@ -36,19 +36,19 @@ class MT_Admin_NewsGeneration extends MT_Admin_Common {
 	 */
 	private function getGeneratedNews() {
 		$query = ORM::for_table('wp_mt_photo')
-					->select_many(array(
-						'galleryName' => 'wp_mt_gallery.name',
-						'categoryName' => 'wp_mt_category.name',
-						'subcategoryName' => 'wp_mt_subcategory.name'
-					))
-					->select_expr('COUNT(wp_mt_gallery.id)', 'numPhotos')
-					->inner_join('wp_mt_gallery', 'wp_mt_gallery.id = wp_mt_photo.gallery')
-					->inner_join('wp_mt_category', 'wp_mt_category.id = wp_mt_gallery.category')
-					->left_outer_join('wp_mt_subcategory', 'wp_mt_subcategory.id = wp_mt_gallery.subcategory')
-					->where_equal('wp_mt_photo.show', 1)
-					->where_gte('wp_mt_photo.date', $this->timestampLatestNews)
-					->group_by(array('wp_mt_category.name', 'wp_mt_subcategory.name', 'wp_mt_gallery.name'))
-					->order_by_desc('numPhotos');
+			->select_many(array(
+				'galleryName' => 'wp_mt_gallery.name',
+				'categoryName' => 'wp_mt_category.name',
+				'subcategoryName' => 'wp_mt_subcategory.name'
+			))
+			->select_expr('COUNT(wp_mt_gallery.id)', 'numPhotos')
+			->inner_join('wp_mt_gallery', 'wp_mt_gallery.id = wp_mt_photo.gallery')
+			->inner_join('wp_mt_category', 'wp_mt_category.id = wp_mt_gallery.category')
+			->left_outer_join('wp_mt_subcategory', 'wp_mt_subcategory.id = wp_mt_gallery.subcategory')
+			->where_equal('wp_mt_photo.show', 1)
+			->where_gte('wp_mt_photo.date', $this->timestampLatestNews)
+			->group_by(array('wp_mt_category.name', 'wp_mt_subcategory.name', 'wp_mt_gallery.name'))
+			->order_by_desc('numPhotos');
 
 		$news = array();
 		foreach ($query->find_many() as $item) {

@@ -13,15 +13,11 @@ class MT_Subcategory extends MT_Common {
 		require_once MT_API_PATH.'/model/File.php';
 		$data['path'] = MT_Admin_Model_File::nameToPath($data['name']);
 		
-		// TODO: may get attribute function?
-		$category = ORM::for_table(DB_PREFIX.'category')
-				->select('path')
-				->where_id_is($data['category'])
-				->find_one();
-		if ($category) {
+		$categoryPath = parent::getAttribute('category', $data['category'], 'path');
+		if ($categoryPath) {
 			$result = parent::post($data);
 			if ($result == HTTP_STATUS_201_CREATED) {
-				MT_Admin_Model_File::createDirectory($category->path.'/'.$data['path']);
+				MT_Admin_Model_File::createDirectory($categoryPath.'/'.$data['path']);
 			}
 			return $result;
 		}

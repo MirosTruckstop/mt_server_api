@@ -21,6 +21,25 @@ abstract class MT_Common {
 	protected static function getTableName() {
 		return DB_PREFIX.static::NAME;
 	}
+	
+	/**
+	 * 
+	 * @param string $entity Database table
+	 * @param int $id
+	 * @param string $field Column name
+	 * @return string|boolean
+	 */
+	protected static function getAttribute($entity, $id, $field) {
+		$item = ORM::for_table(DB_PREFIX.$entity)
+			->select($field, 'value')
+			->where_id_is($id)
+			->find_one();
+		if ($item) {
+			return $item->value;			
+		} else {
+			return FALSE;
+		}
+	}
 
 	/**
 	 * @todo Array for $order supported?
