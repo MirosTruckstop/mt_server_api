@@ -10,19 +10,19 @@ class MT_Photo extends MT_Common {
 	const NAME = 'photo';
 	
 	public static function getList($fields = NULL, $filter = NULL, $order = NULL, $limit = NULL, $offset = NULL, $query = NULL) {
-		$query = ORM::for_table(DB_PREFIX.'photo')
+		$query = ORM::for_table(parent::getTableName())
 			->inner_join(DB_PREFIX.'photographer', array(
-				DB_PREFIX.'photographer.id',
+				'photographer.id',
 				'=',
-				DB_PREFIX.'photo.photographer'
-			))
+				parent::getTableName().'.photographer'
+			), 'photographer')
 			->select_many(array(
-				'id' => DB_PREFIX.'photo.id',
+				'id' => parent::getTableName().'.id',
 				'description',
 				'path',
-				'date' => DB_PREFIX.'photo.date',
-				'photographerId' => DB_PREFIX.'photographer.id',					
-				'photographerName' => DB_PREFIX.'photographer.name'
+				'date' => parent::getTableName().'.date',
+				'photographerId' => 'photographer.id',					
+				'photographerName' => 'photographer.name'
 			))
 			->where_equal('show', 1);
 		return parent::getList($fields, $filter, $order, $limit, $offset, $query);

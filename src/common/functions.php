@@ -5,6 +5,7 @@ const HTTP_STATUS_201_CREATED = 201;
 const HTTP_STATUS_202_ACCEPTED = 202;
 const HTTP_STATUS_204_NO_CONTENT = 204;	
 const HTTP_STATUS_400_BAD_REQUEST = 400;
+const HTTP_STATUS_403_FORBIDDEN = 403;
 const HTTP_STATUS_404_NOT_FOUND = 404;
 // Response header parameter names
 const HEADER_CONTENT_TYPE = 'Content-Type';
@@ -61,4 +62,13 @@ function setBody($value) {
 
 	global $mt_json_encode_options;
 	echo json_encode($value, $mt_json_encode_options);
+}
+/**
+ * 
+ * @param string $message
+ */
+function setBodyErrorMessage($message) {
+	setBody([
+		'error' => $message
+	]);
 }

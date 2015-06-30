@@ -18,7 +18,7 @@ abstract class MT_Common {
 	 * 
 	 * @return string
 	 */
-	private static function getTableName() {
+	protected static function getTableName() {
 		return DB_PREFIX.static::NAME;
 	}
 
@@ -66,6 +66,7 @@ abstract class MT_Common {
 			setBody($query->find_array());
 			return HTTP_STATUS_200_OK;
 		} catch (Exception $e) {
+			setBodyErrorMessage($e->getMessage());
 			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
@@ -81,6 +82,7 @@ abstract class MT_Common {
 			$item->set($data)->save();
 			return HTTP_STATUS_201_CREATED;
 		} catch (Exception $e) {
+			setBodyErrorMessage($e->getMessage());
 			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
@@ -106,6 +108,7 @@ abstract class MT_Common {
 				return HTTP_STATUS_204_NO_CONTENT;
 			}
 		} catch (Exception $e) {
+			setBodyErrorMessage($e->getMessage());			
 			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
@@ -126,6 +129,7 @@ abstract class MT_Common {
 				return HTTP_STATUS_204_NO_CONTENT;
 			}
 		} catch (Exception $e) {
+			setBodyErrorMessage($e->getMessage());			
 			return HTTP_STATUS_400_BAD_REQUEST;
 		}
 	}
@@ -133,15 +137,20 @@ abstract class MT_Common {
 	/**
 	 * 
 	 * @param int $id
+	 * @param boolean $delete
 	 * @return string HTTP status code
 	 */
-	public static function deleteItem($id) {
-		$item = ORM::for_table(self::getTableName())->find_one($id);
-		if ($item) {
-			$item->delete();
-			return HTTP_STATUS_202_ACCEPTED;
+	public static function deleteItem($id, $delete) {
+		if ($delete) {
+			$item = ORM::for_table(self::getTableName())->find_one($id);
+			if ($item) {
+				$item->delete();
+				return HTTP_STATUS_202_ACCEPTED;
+			}
+			return HTTP_STATUS_204_NO_CONTENT;
+		} else {
+			return HTTP_STATUS_403_FORBIDDEN;			
 		}
-		return HTTP_STATUS_204_NO_CONTENT;
 	}
 	
 }
