@@ -13,4 +13,8 @@ class MT_News extends MT_Common {
 		$data['date'] = time();
 		return parent::post($data);
 	}
+	
+	public static function deleteItem($id, $delete) {
+		return parent::deleteItem($id, TRUE);
+	}	
 }

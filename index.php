@@ -35,6 +35,12 @@ $app->hook('slim.before.router', function() use ($app) {
 	else if (strpos($path, 'photographers') !== false) {
 		require MT_API_PATH.'/public/Photographers.php';
 	}
+	else if (strpos($path, 'subcategory') !== false) {
+		require MT_API_PATH.'/public/Subcategory.php';
+	}	
+	else if (strpos($path, 'category') !== false) {
+		require MT_API_PATH.'/public/Category.php';
+	}
 });
 
 // 'public' group
@@ -73,6 +79,32 @@ $app->group('/api/public', function () use ($app) {
 	});	
 	$app->delete('/photographers/:id', function($id) use ($app) {
 		$app->response->setStatus(MT_Photographer::deleteItem($id));
+	});
+	// Category
+	$app->get('/category/', function() use ($app) {
+		$app->response->setStatus(MT_Category::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
+	});
+	$app->get('/category/:id', function($id) use ($app) {
+		$app->response->setStatus(MT_Category::getItem($id, getParam(PARAM_FIELDS)));
+	});
+	$app->post('/category/', function() use ($app) {
+		$app->response->setStatus(MT_Category::post(getBody()));
+	});
+	$app->post('/category/:id', function($id) use ($app) {
+		$app->response->setStatus(MT_Category::postItem($id, getBody()));
+	});	
+	// Subcategory
+	$app->get('/subcategory/', function() use ($app) {
+		$app->response->setStatus(MT_Subcategory::getList(getParam(PARAM_FIELDS), getParam(PARAM_FILTER), getParam(PARAM_ORDER), getParam(PARAM_LIMIT), getParam(PARAM_OFFSET)));
+	});
+	$app->get('/subcategory/:id', function($id) use ($app) {
+		$app->response->setStatus(MT_Subcategory::getItem($id, getParam(PARAM_FIELDS)));
+	});
+	$app->post('/subcategory/', function() use ($app) {
+		$app->response->setStatus(MT_Subcategory::post(getBody()));
+	});
+	$app->post('/subcategory/:id', function($id) use ($app) {
+		$app->response->setStatus(MT_Subcategory::postItem($id, getBody()));
 	});
 });
 
