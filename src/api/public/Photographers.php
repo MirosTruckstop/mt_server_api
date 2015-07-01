@@ -15,6 +15,12 @@ class MT_Photographer extends MT_Common {
 	}
 
 	public static function getList($fields = NULL, $filter = NULL, $order = NULL, $limit = NULL, $offset = NULL, $query = NULL) {
+		$selectMany = parent::mergeFieldsAndSelectMany($fields, array(
+			'id' => parent::getTableName().'.id',
+			'name' => parent::getTableName().'.name',
+			'date' => parent::getTableName().'.date',
+		));
+		
 		$query = ORM::for_table(parent::getTableName())
 			// TODO: get all photographers, also without photos
 /*			->raw_join('LEFT JOIN '.DB_PREFIX.'photo', array(
@@ -27,15 +33,11 @@ class MT_Photographer extends MT_Common {
 				'=',
 				'photo.photographer'
 			), 'photo')
-			->select_many(array(
-				'id' => parent::getTableName().'.id',
-				'name' => parent::getTableName().'.name',
-				'date' => parent::getTableName().'.date',
-			))
+			->select_many($selectMany)
 			->select_expr('COUNT(photo.path)', 'numPhotos')
 			->where_equal('photo.show', 1)
 			->group_by(parent::getTableName().'.id');
-		return parent::getList($fields, $filter, $order, $limit, $offset, $query);
+		return parent::getList(null, $filter, $order, $limit, $offset, $query);
 	} 
 	
 	public static function deleteItem($id, $delete = NULL) {

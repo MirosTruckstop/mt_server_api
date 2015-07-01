@@ -40,6 +40,24 @@ abstract class MT_Common {
 			return FALSE;
 		}
 	}
+	
+	/**
+	 * 
+	 * @todo $fields can be a string
+	 * @param array|null $fields
+	 * @param array $selectMany
+	 * @return array
+	 */
+	protected static function mergeFieldsAndSelectMany($fields, array $selectMany) {
+		if (is_array($fields)) {
+			foreach ($selectMany as $key => $value) {
+				if (!in_array($key, $fields)) {
+					unset($selectMany[$key]);
+				}
+			}
+		}
+		return $selectMany;
+	}
 
 	/**
 	 * @todo Array for $order supported?
