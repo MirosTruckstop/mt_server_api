@@ -1,8 +1,7 @@
 <?php
 /**
  * 
- * @package back-end
- * @subpackage model
+ * @package model
  */
 class MT_Admin_Model_File {
 	

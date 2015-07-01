@@ -34,7 +34,7 @@ class MT_Photographer extends MT_Common {
 				'photo.photographer'
 			), 'photo')
 			->select_many($selectMany)
-			->select_expr('COUNT(photo.path)', 'numPhotos')
+			->select_expr('COUNT(photo.id)', 'numPhotos')
 			->where_equal('photo.show', 1)
 			->group_by(parent::getTableName().'.id');
 		return parent::getList(null, $filter, $order, $limit, $offset, $query);

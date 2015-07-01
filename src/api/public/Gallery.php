@@ -9,6 +9,31 @@ class MT_Gallery extends MT_Common {
 	
 	const NAME = 'gallery';
 	
+	public static function getList($fields = NULL, $filter = NULL, $order = NULL, $limit = NULL, $offset = NULL, $query = NULL) {
+		$selectMany = parent::mergeFieldsAndSelectMany($fields, array(
+			'id' => parent::getTableName().'.id',
+			'category',
+			'subcategory',
+			'name',
+			'path' => parent::getTableName().'.path',
+			'fullPath',
+			'date' => parent::getTableName().'.date'
+		));
+				
+		$query = ORM::for_table(parent::getTableName())
+			->left_outer_join(DB_PREFIX.'photo', [
+				parent::getTableName().'.id',
+				'=',
+				'photo.gallery'
+			], 'photo')
+			->select_many($selectMany)
+			->select_expr('COUNT(photo.id)', 'numPhotos')
+			->select_expr('MAX(photo.date)', 'updated')
+			->where_equal('photo.show', 1)
+			->group_by(parent::getTableName().'.id');
+		parent::getList(null, $filter, $order, $limit, $offset, $query);
+	}
+	
 	public static function post(array $data) {
 		require_once MT_API_PATH.'/model/File.php';
 
